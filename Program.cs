@@ -22,6 +22,8 @@ namespace NetworkSpeedTest
 
             string filePath = config["Settings:filePath"] ?? "network_test.txt";
             string email = "";
+            string senderEmail = config["SendGrid:senderEmail"];
+            string senderName = config["SendGrid:senderName"];
 
             if (outputChoice == "2")
             {
@@ -32,7 +34,9 @@ namespace NetworkSpeedTest
 
             if (runChoice == "1")
             {
-                await MeasureAndSaveResults(networkService, fileService, emailService, filePath, email, outputChoice);
+                await MeasureAndSaveResults(networkService, fileService, emailService,
+                                            filePath, email, outputChoice,
+                                            senderEmail, senderName);
             }
             else if (runChoice == "2")
             {
@@ -47,7 +51,9 @@ namespace NetworkSpeedTest
 
                 while (DateTime.Now < endTime)
                 {
-                    string result = await MeasureAndSaveResults(networkService, fileService, emailService, filePath, email, outputChoice, false);
+                    string result = await MeasureAndSaveResults(networkService, fileService, emailService, 
+                                                                filePath, email, outputChoice, senderEmail, 
+                                                                senderName, false);
                     allResults.Add(result);
                     Console.WriteLine($"Waiting for {intervalMinutes} minutes...");
                     await Task.Delay(TimeSpan.FromMinutes(intervalMinutes));
@@ -55,14 +61,16 @@ namespace NetworkSpeedTest
 
                 if (outputChoice == "2")
                 {
-                    await emailService.SendEmailAsync(email, string.Join("\n", allResults));
+                    await emailService.SendEmailAsync(email, string.Join("\n", allResults), senderEmail, senderName);
                 }
             }
 
             Console.WriteLine("Operation completed.");
         }
 
-        static async Task<string> MeasureAndSaveResults(NetworkService networkService, FileService fileService, EmailService emailService, string filePath, string email, string outputChoice, bool sendImmediate = true)
+        static async Task<string> MeasureAndSaveResults(NetworkService networkService, FileService fileService, EmailService emailService,
+                                                        string filePath, string email, string outputChoice,
+                                                        string senderEmail, string senderName, bool sendImmediate = true)
         {
             string pingAddress = "google.com";
             long pingTime = networkService.MeasurePing(pingAddress);
@@ -84,7 +92,7 @@ namespace NetworkSpeedTest
             }
             else if (outputChoice == "2" && sendImmediate)
             {
-                await emailService.SendEmailAsync(email, result);
+                await emailService.SendEmailAsync(email, result, senderEmail, senderName);
             }
 
             return result;

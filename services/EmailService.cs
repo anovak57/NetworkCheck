@@ -12,11 +12,11 @@ namespace NetworkSpeedTest.Services
             _apiKey = apiKey;
         }
 
-        public async Task SendEmailAsync(string email, string result)
+        public async Task SendEmailAsync(string email, string result, string senderEmail, string senderName)
         {
             var client = new SendGridClient(_apiKey);
 
-            var from = new EmailAddress("networktestapp57@gmail.com", "Network Test");
+            var from = new EmailAddress(senderEmail, senderName);
             var subject = "Network Parameters Report";
             var to = new EmailAddress(email);
 

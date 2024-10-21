@@ -16,7 +16,7 @@ NetworkCheck is a simple command-line application that allows users to measure n
 To run this application, you need the following:
 
 1. [.NET Core SDK](https://dotnet.microsoft.com/download)
-2. A [SendGrid API Key](https://sendgrid.com/) -- Here you will also need to create a sender and use that sender as senderEmail and senderName values in the next step
+2. [SendGrid API Key](https://sendgrid.com/) -- Here you will also need to create a sender and use that sender as senderEmail and senderName values in the next step. *This is only needed for email sending functionality, if you want to use the app to save reuslts to a file you can do that without this step*.
 3. Basic configuration settings in a `appsettings.Development.json` file
 
 ### appsettings.Development.json
